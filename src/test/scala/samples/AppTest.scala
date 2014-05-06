@@ -6,19 +6,19 @@ import Assert._
 @Test
 class AppTest {
 
-    @Test
-    def testOK() {
-      val s = List(1,2,3,4,5).reverse.foldLeft(""){
-        (acc, v) =>
-          acc + v
-      }
-
-      println(s)
-      assertTrue(true)
+  @Test
+  def testOK() {
+    val s = List(1, 2, 3, 4, 5).reverse.foldLeft("") {
+      (acc, v) =>
+        acc + v
     }
 
-//    @Test
-//    def testKO() = assertTrue(false)
+    println(s)
+    assertTrue(true)
+  }
+
+  //    @Test
+  //    def testKO() = assertTrue(false)
 
 }
 
