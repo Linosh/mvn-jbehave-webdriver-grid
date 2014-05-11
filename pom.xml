@@ -17,6 +17,7 @@
 
     <properties>
         <scala.version>2.11.0</scala.version>
+        <selenium-java.version>2.41.0</selenium-java.version>
     </properties>
 
     <dependencies>
@@ -24,6 +25,13 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+
+        <!-- Selenium WebDriver -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium-java.version}</version>
         </dependency>
 
         <!-- Test -->
@@ -72,12 +80,13 @@
                 <configuration>
                     <useFile>false</useFile>
                     <disableXmlReport>true</disableXmlReport>
-                    <!-- If you have classpath issue like NoDefClassError,... -->
-                    <!-- useManifestOnlyJar>false</useManifestOnlyJar -->
                     <includes>
                         <include>**/*Test.*</include>
-                        <include>**/*Suite.*</include>
+                        <include>**/*Story.*</include>
                     </includes>
+                    <parallel>methods</parallel>
+                    <threadCountMethods>2</threadCountMethods>
+                    <perCoreThreadCount>false</perCoreThreadCount>
                 </configuration>
             </plugin>
         </plugins>

@@ -5,7 +5,7 @@ import org.jbehave.core.annotations.{Then, When, Given}
 class TestSteps {
   @Given("system in default state")
   def systemDefaultState() {
-    Thread.sleep(5000)
+//    Thread.sleep(5000)
     println("System is in default state")
   }
 
