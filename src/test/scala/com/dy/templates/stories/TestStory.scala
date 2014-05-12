@@ -45,7 +45,7 @@ class TestStory extends ConfigurableEmbedder {
     Thread.sleep(3000)
     driver.get("http://seasonvar.ru")
     Thread.sleep(3000)
-    driver.close()
+    driver.quit()
 
   }
 
