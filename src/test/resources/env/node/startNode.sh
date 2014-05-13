@@ -31,22 +31,22 @@ fi
 
 
 ### Validate props ###
-if [[ $NODE_PORT == '' ]]
+if [ -z $NODE_PORT ]
 then
-    echo "--nodePort is missed"
-    exit -1
+    echo "--nodePort is missed. Node didn't start"
+    exit 1
 fi
 
-if [[ $HUB_HOST == '' ]]
+if [ -z $HUB_HOST ]
 then
-    echo "--hubHost is missed"
-    exit -1
+    echo "--hubHost is missed. Node didn't start"
+    exit 1
 fi
 
-if [[ $HUB_PORT == '' ]]
+if [ -z $HUB_PORT ]
 then
-    echo "--hubPort is missed"
-    exit -1
+    echo "--hubPort is missed. Node didn't start"
+    exit 1
 fi
 ######################
 
