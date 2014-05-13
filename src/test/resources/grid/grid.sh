@@ -1,21 +1,21 @@
 #!/bin/sh
 
-NODES_TO_START=(chrome firefox)
+source grid.properties
 
 case "$1" in
 'start')
-    echo "Starting Grid"
+    echo 'Starting Grid'
     startHub
     startNodes
 ;;
 
 'stop')
-    echo "Stopping Grid"
+    echo 'Stopping Grid'
     stopHub
     stopNodes
 ;;
 'restart')
-    echo "Restarting Grid"
+    echo 'Restarting Grid'
     stopHub
     stopNodes
 
@@ -29,15 +29,13 @@ esac
 
 
 function startHub {
-    source hub/hub.properties;
-    echo "Starting HUB on $HUB_SSH_HOST:$HUB_PORT";
-    ssh $HUB_SSH_USER@$HUB_SSH_HOST:$HUBSSH_PORT -f -n "cd $HUB_HOME; ./startHub.sh"
+    echo "Starting HUB on $HUB_SSH_HOST:$HUB_PORT"
+    ssh $HUB_SSH_USER@$HUB_SSH_HOST:$HUBSSH_PORT -f -n 'cd $HUB_HOME; ./startHub.sh' $HUB_PORT
 }
 
 function stopHub {
-    source hub/hub.properties;
-    echo "Stoping HUB on $HUB_SSH_HOST:$HUB_PORT";
-    ssh $HUB_SSH_USER@$HUB_SSH_HOST:$HUBSSH_PORT -f -n "cd $HUB_HOME; ./stopHub.sh"
+    echo "Stoping HUB on $HUB_SSH_HOST:$HUB_PORT"
+    ssh $HUB_SSH_USER@$HUB_SSH_HOST:$HUBSSH_PORT -f -n 'cd $HUB_HOME; ./stopHub.sh'
 }
 
 function startNodes {
@@ -45,6 +43,7 @@ function startNodes {
     do
         source $node/node.properties;
         echo "Starting Node on $NODE_SSH_HOST:$NODE_PORT";
+        ssh $NODE_SSH_USER@$NODE_SSH_HOST:$NODE_SSH_PORT -f -n 'cd $NODE_HOME; ./startNode.sh' $JAVA_PARAMS $NODE_PORT $HUB_HOST $HUB_PORT $NODE_PARAMS
     done
 }
 
