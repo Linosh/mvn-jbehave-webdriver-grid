@@ -24,7 +24,7 @@ function stopNodes {
     do
         source $node/node.properties;
         echo "-> Stoping Node: $NODE_SSH_HOST:$NODE_PORT";
-        ssh $NODE_SSH_USER@$NODE_SSH_HOST -p $NODE_SSH_PORT -f -n 'cd $NODE_HOME; ./stopNode.sh'
+        ssh $NODE_SSH_USER@$NODE_SSH_HOST -p $NODE_SSH_PORT -f -n 'cd $NODE_HOME; ./stopNode.sh' $NODE_PORT
     done
 }
 

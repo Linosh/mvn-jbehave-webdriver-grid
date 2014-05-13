@@ -52,7 +52,7 @@ fi
 
 
 ##### Start Node #####
-LOGFILE=./log
+LOGFILE=./log$NODE_PORT
 nohup java $JAVA_ARGS -jar selenium-server.jar -port $NODE_PORT -role node -hub http://$HUB_HOST:$HUB_PORT/grid/register $NODE_ARGS > $LOGFILE 2>&1 &
-echo $! > pid
+echo $! > pid$NODE_PORT
 ######################

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-if [ -f pid ]
+if [ -f pid$1 ]
 then
-    kill `cat pid`
-    rm pid
+    kill `cat pid$1`
+    rm pid$1
 else
-    echo "File pid doesn't exist" >> log
+    echo "File pid$1 doesn't exist" >> log$1
 fi
