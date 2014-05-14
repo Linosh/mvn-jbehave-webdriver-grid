@@ -35,9 +35,9 @@ class TestStory extends ConfigurableEmbedder {
       case _ => null
     }
 
-    capability.setPlatform(Platform.MAC)
+    capability.setPlatform(Platform.LINUX)
 
-    val driver: WebDriver = new RemoteWebDriver(new URL("http://127.0.0.1:4444/wd/hub"), capability)
+    val driver: WebDriver = new RemoteWebDriver(new URL("http://192.160.1.82:4444/wd/hub"), capability)
     driver.manage().window().setSize(new Dimension(200, 200))
     driver.get("http://localhost:4444/grid/console")
     Thread.sleep(3000)

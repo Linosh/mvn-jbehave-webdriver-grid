@@ -15,7 +15,7 @@ function startNodes {
     do
         source $node/node.properties;
         echo "-> Starting Node: $NODE_SSH_HOST:$NODE_PORT";
-        ssh $NODE_SSH_USER@$NODE_SSH_HOST -p $NODE_SSH_PORT -f -n 'cd $NODE_HOME; ./startNode.sh' "--nodePort $NODE_PORT --hubHost \"$HUB_HOST\" --hubPort $HUB_PORT --nodeArgs \"$NODE_PARAMS\""
+        ssh $NODE_SSH_USER@$NODE_SSH_HOST -p $NODE_SSH_PORT -f -n 'cd $NODE_HOME; ./startNode.sh' "--javaArgs $JAVA_ARGS --nodePort $NODE_PORT --hubHost \"$HUB_HOST\" --hubPort $HUB_PORT --nodeArgs \"$NODE_ARGS\""
     done
 }
 
