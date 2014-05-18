@@ -1,32 +1,47 @@
 #!/bin/sh
 
+function debug {
+    if [ -n "$GRID_DEBUG" ]; then
+        v=$1
+        if [ -n "${!v}" ]; then
+            echo $1": "${!v}
+        fi
+    fi
+}
+
 ##### Parse props ####
-OPTIONS=$(getopt -o hf:gb -l javaArgs:,nodePort:,hubHost:,hubPort:,nodeArgs: -- "$@")
-
-if [ $? -ne 0 ]; then
-  echo "getopt error"
-  exit 1
-fi
-
-eval set -- $OPTIONS
-
-while true; do
+### Start using hand made parser 'cause this script should work not only on *nix OSs
+JAVA_ARGS=""
+NODE_PORT=""
+HUB_HOST=""
+HUB_PORT=""
+NODE_ARGS=""
+while : ; do
   case "$1" in
-    --javaArgs)  JAVA_ARGS="$2" ; shift ;;
-    --nodePort)  NODE_PORT="$2" ; shift ;;
-    --hubHost)   HUB_HOST="$2"  ; shift ;;
-    --hubPort)   HUB_PORT="$2"  ; shift ;;
-    --nodeArgs)  NODE_ARGS="$2" ; shift ;;
-    --)                           shift ; break ;;
-    *)  echo "unknown option: $1" ; exit 1 ;;
+    --javaArgs)
+       [ -n "${JAVA_ARGS}" ] && usage
+       JAVA_ARGS="$2"
+       shift 2 ;;
+    --nodePort)
+       [ -n "${NODE_PORT}" ] && usage
+       NODE_PORT="$2"
+       shift 2 ;;
+    --hubHost)
+       [ -n "${HUB_HOST}" ] && usage
+       HUB_HOST="$2"
+       shift 2 ;;
+    --hubPort)
+       [ -n "${HUB_PORT}" ] && usage
+       HUB_PORT="$2"
+       shift 2 ;;
+    --nodeArgs)
+       [ -n "${NODE_ARGS}" ] && usage
+       NODE_ARGS="$2"
+       shift ;;
+    *)
+       break ;;
   esac
-  shift
 done
-
-if [ $# -ne 0 ]; then
-  echo "unknown option(s): $@"
-  exit 1
-fi
 ######################
 
 
