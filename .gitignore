@@ -18,3 +18,7 @@ project/plugins/project/
 *.iml
 *.ipr
 .idea/
+
+## Project related
+log*
+pid*

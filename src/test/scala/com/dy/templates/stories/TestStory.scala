@@ -1,6 +1,6 @@
 package com.dy.templates.stories
 
-import org.junit.{Test, After, Before}
+import org.junit.{Ignore, Test, After, Before}
 import org.jbehave.core.steps.InstanceStepsFactory
 import com.dy.templates.steps.TestSteps
 import org.jbehave.core.configuration.{MostUsefulConfiguration, Configuration}
@@ -10,9 +10,12 @@ import java.util.Arrays._
 import org.jbehave.core.ConfigurableEmbedder
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.openqa.selenium.remote.{RemoteWebDriver, DesiredCapabilities}
-import org.openqa.selenium.{Point, Dimension, Platform, WebDriver}
-import java.net.URL
+import org.openqa.selenium.remote.{HttpCommandExecutor, CapabilityType, RemoteWebDriver, DesiredCapabilities}
+import org.openqa.selenium._
+import java.net.{ProtocolFamily, URL}
+import java.util.Properties
+import java.util
+import java.util.concurrent.TimeUnit
 
 @RunWith(classOf[JUnit4])
 class TestStory extends ConfigurableEmbedder {
@@ -35,9 +38,18 @@ class TestStory extends ConfigurableEmbedder {
       case _ => null
     }
 
-    capability.setPlatform(Platform.LINUX)
+    capability.setPlatform(Platform.MAC)
+    capability.setCapability(CapabilityType.ENABLE_PROFILING_CAPABILITY, true);
 
-    val driver: WebDriver = new RemoteWebDriver(new URL("http://192.160.1.82:4444/wd/hub"), capability)
+    val gridProps = new Properties();
+    gridProps.load(getClass.getClassLoader.getResourceAsStream("grid/grid.properties"))
+
+    val hubUrl = new URL("http", gridProps.getProperty("HUB_SSH_HOST"), gridProps.getProperty("HUB_PORT").toInt, "/wd/hub")
+    val httpCmdExec = new HttpCommandExecutor(hubUrl)
+
+
+    val driver: WebDriver = new RemoteWebDriver(capability)
+    driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
     driver.manage().window().setSize(new Dimension(200, 200))
     driver.get("http://localhost:4444/grid/console")
     Thread.sleep(3000)
