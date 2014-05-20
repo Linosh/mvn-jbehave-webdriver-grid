@@ -15,7 +15,9 @@ import org.openqa.selenium._
 import java.net.{ProtocolFamily, URL}
 import java.util.Properties
 import java.util
-import java.util.concurrent.TimeUnit
+import java.util.concurrent._
+import TestStory._
+import java.util.concurrent.locks.ReentrantLock
 
 @RunWith(classOf[JUnit4])
 class TestStory extends ConfigurableEmbedder {
@@ -41,14 +43,11 @@ class TestStory extends ConfigurableEmbedder {
     capability.setPlatform(Platform.MAC)
     capability.setCapability(CapabilityType.ENABLE_PROFILING_CAPABILITY, true);
 
-    val gridProps = new Properties();
-    gridProps.load(getClass.getClassLoader.getResourceAsStream("grid/grid.properties"))
-
-    val hubUrl = new URL("http", gridProps.getProperty("HUB_SSH_HOST"), gridProps.getProperty("HUB_PORT").toInt, "/wd/hub")
-    val httpCmdExec = new HttpCommandExecutor(hubUrl)
 
 
-    val driver: WebDriver = new RemoteWebDriver(capability)
+    val hubUrl = new URL("http", gridParams.getProperty(HUB_SSH_HOST), gridParams.getProperty(HUB_PORT).toInt, "/wd/hub")
+
+    val driver: WebDriver = WebDriverFactory.createWD(hubUrl, capability)
     driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
     driver.manage().window().setSize(new Dimension(200, 200))
     driver.get("http://localhost:4444/grid/console")
@@ -93,5 +92,48 @@ class TestStory extends ConfigurableEmbedder {
     finally {
       embedder.generateCrossReference()
     }
+  }
+}
+
+object TestStory {
+  val HUB_SSH_HOST = "HUB_SSH_HOST"
+  val HUB_PORT = "HUB_PORT"
+  val GRID_STARTUP_TIMEOUT = "GRID_STARTUP_TIMEOUT"
+
+  val lock = new ReentrantLock()
+  val condition = lock.newCondition()
+
+  val gridParams = {
+    val gridProps = new Properties()
+    gridProps.load(getClass.getClassLoader.getResourceAsStream("grid/grid.properties"))
+    gridProps
+  }
+
+
+}
+
+
+object WebDriverFactory {
+
+  val executor = Executors.newSingleThreadExecutor()
+
+  def createWD(url: URL, capabilities: Capabilities): WebDriver = {
+    val task = executor.submit(new Callable[RemoteWebDriver] {
+      override def call(): RemoteWebDriver = {
+        var driver: RemoteWebDriver = null;
+        while (driver == null) {
+          try {
+            driver = new RemoteWebDriver(url, capabilities);
+            println(driver.toString)
+          } catch {
+            case _ => print(_)
+          }
+        }
+
+        return driver
+      }
+    })
+
+    return task.get(TestStory.gridParams.getProperty(TestStory.GRID_STARTUP_TIMEOUT).toLong, TimeUnit.SECONDS)
   }
 }
