@@ -1,20 +1,19 @@
 package com.dy.templates.stories
 
-import org.junit.{Ignore, Test, After, Before}
+import org.junit.{Test, After, Before}
 import org.jbehave.core.steps.InstanceStepsFactory
 import com.dy.templates.steps.TestSteps
-import org.jbehave.core.configuration.{MostUsefulConfiguration, Configuration}
+import org.jbehave.core.configuration.MostUsefulConfiguration
 import org.jbehave.core.embedder.Embedder
 import org.jbehave.core.io.StoryPathResolver
 import java.util.Arrays._
 import org.jbehave.core.ConfigurableEmbedder
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.openqa.selenium.remote.{HttpCommandExecutor, CapabilityType, RemoteWebDriver, DesiredCapabilities}
+import org.openqa.selenium.remote.{CapabilityType, RemoteWebDriver, DesiredCapabilities}
 import org.openqa.selenium._
-import java.net.{ProtocolFamily, URL}
+import java.net.URL
 import java.util.Properties
-import java.util
 import java.util.concurrent._
 import TestStory._
 import java.util.concurrent.locks.ReentrantLock
@@ -41,14 +40,14 @@ class TestStory extends ConfigurableEmbedder {
     }
 
     capability.setPlatform(Platform.MAC)
-    capability.setCapability(CapabilityType.ENABLE_PROFILING_CAPABILITY, true);
+    capability.setCapability(CapabilityType.ENABLE_PROFILING_CAPABILITY, true)
 
 
 
     val hubUrl = new URL("http", gridParams.getProperty(HUB_SSH_HOST), gridParams.getProperty(HUB_PORT).toInt, "/wd/hub")
 
     val driver: WebDriver = WebDriverFactory.createWD(hubUrl, capability)
-    driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+    driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS)
     driver.manage().window().setSize(new Dimension(200, 200))
     driver.get("http://localhost:4444/grid/console")
     Thread.sleep(3000)
@@ -120,20 +119,20 @@ object WebDriverFactory {
   def createWD(url: URL, capabilities: Capabilities): WebDriver = {
     val task = executor.submit(new Callable[RemoteWebDriver] {
       override def call(): RemoteWebDriver = {
-        var driver: RemoteWebDriver = null;
+        var driver: RemoteWebDriver = null
         while (driver == null) {
           try {
-            driver = new RemoteWebDriver(url, capabilities);
+            driver = new RemoteWebDriver(url, capabilities)
             println(driver.toString)
           } catch {
-            case _ => print(_)
+            case _: Exception => print(_)
           }
         }
 
-        return driver
+        driver
       }
     })
 
-    return task.get(TestStory.gridParams.getProperty(TestStory.GRID_STARTUP_TIMEOUT).toLong, TimeUnit.SECONDS)
+    task.get(TestStory.gridParams.getProperty(TestStory.GRID_STARTUP_TIMEOUT).toLong, TimeUnit.SECONDS)
   }
 }
