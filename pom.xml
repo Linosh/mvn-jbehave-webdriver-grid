@@ -167,7 +167,7 @@
                         <executions>
                             <execution>
                                 <id>nodeEnvArchive</id>
-                                <phase>clean</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>single</goal>
                                 </goals>
@@ -181,7 +181,7 @@
                             </execution>
                             <execution>
                                 <id>hubEnvArchive</id>
-                                <phase>clean</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>single</goal>
                                 </goals>
